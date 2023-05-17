@@ -1,15 +1,22 @@
+use std::{env, error::Error, fs, process};
+
 fn main() {
-    let args: Vec<String> = std::env::args().collect();
+    let args: Vec<String> = env::args().collect();
     let input: Input = Input::new(&args).unwrap_or_else(|err| {
         println!("{}", err);
-        std::process::exit(1) // exit without panic
+        process::exit(1) // exit without panic
     });
-    run(input);
+    if let Err(err) = run(input) {
+        println!("Application error: {}", err);
+        process::exit(1);
+    }
 }
 
-fn run(input: Input) {
-    let content = std::fs::read_to_string(input.filename).expect("Error reading the file");
+fn run(input: Input) -> Result<(), Box<dyn Error>> {
+    let content = fs::read_to_string(input.filename)?;
     println!("FILE CONTENT: {}", content);
+
+    Ok(())
 }
 
 struct Input {
