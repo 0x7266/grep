@@ -4,8 +4,12 @@ fn main() {
         println!("{}", err);
         std::process::exit(1) // exit without panic
     });
+    run(input);
+}
+
+fn run(input: Input) {
     let content = std::fs::read_to_string(input.filename).expect("Error reading the file");
-    println!("FILENAME: {}", content);
+    println!("FILE CONTENT: {}", content);
 }
 
 struct Input {
