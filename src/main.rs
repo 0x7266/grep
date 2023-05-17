@@ -1,5 +1,8 @@
 fn main() {
     let args: Vec<String> = std::env::args().collect();
+    if args.len() < 3 {
+        panic!("Not enough arguments")
+    }
     let input: Input = Input::new(&args);
     let content = std::fs::read_to_string(input.filename).expect("Error reading the file");
     println!("FILENAME: {}", content);
