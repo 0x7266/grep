@@ -1,11 +1,16 @@
-use std::{error::Error, fs};
+use std::{env, error::Error, fs};
 
 pub fn run(input: Input) -> Result<(), Box<dyn Error>> {
     let contents = fs::read_to_string(input.filename)?;
     let mut index = 1;
+    let results = if input.case_sensitive {
+        search(&input.query, &contents)
+    } else {
+        search_case_insensitive(&input.query, &contents)
+    };
     println!("---------------------------------");
     println!("        RESULTS:        \n\n");
-    for line in search(&input.query, &contents) {
+    for line in results {
         println!("{}- {}\n", index, line);
         index += 1;
     }
@@ -16,6 +21,7 @@ pub fn run(input: Input) -> Result<(), Box<dyn Error>> {
 pub struct Input {
     pub query: String,
     pub filename: String,
+    pub case_sensitive: bool,
 }
 
 impl Input {
@@ -23,9 +29,11 @@ impl Input {
         if args.len() < 3 {
             return Err("Not enough arguments");
         }
+        let case_sensitive = env::var("CASE_INSENSITIVE").is_err();
         Ok(Input {
             query: args[1].clone(),
             filename: args[2].clone(),
+            case_sensitive,
         })
     }
 }
