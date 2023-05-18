@@ -1,9 +1,15 @@
 use std::{error::Error, fs};
 
 pub fn run(input: Input) -> Result<(), Box<dyn Error>> {
-    let content = fs::read_to_string(input.filename)?;
-    println!("FILE CONTENT: {}", content);
-
+    let contents = fs::read_to_string(input.filename)?;
+    let mut index = 1;
+    println!("---------------------------------");
+    println!("        RESULTS:        \n\n");
+    for line in search(&input.query, &contents) {
+        println!("{}- {}\n", index, line);
+        index += 1;
+    }
+    println!("---------------------------------\n\n");
     Ok(())
 }
 
@@ -48,4 +54,6 @@ Pick three.";
 
         assert_eq!(vec!["Pick three."], search(query, contents))
     }
+
+    fn search_case_insensitive() {}
 }
